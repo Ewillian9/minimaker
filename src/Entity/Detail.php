@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\DetailRepository;
 use Doctrine\ORM\Mapping as ORM;
+
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: DetailRepository::class)]
 class Detail
@@ -54,7 +55,7 @@ class Detail
 
     public function __construct()
     {
-        $this->country = "FR";
+        $this->country = 'FR';
         $this->portfolio_check = false;
         $this->strikes = 0;
         $this->is_banned = false;
@@ -63,7 +64,7 @@ class Detail
     #[ORM\PrePersist]
     public function setCreatedAtValue()
     {
-        $this->created_at = new \DateTimeImmutable();   
+        $this->created_at = new \DateTimeImmutable();
     }
 
     #[ORM\PreUpdate]
@@ -103,10 +104,10 @@ class Detail
 
     public function getFullAddress(): ?string
     {
-        return $this->address .    
-        ', ' . $this->postal_code .
-        ' ' . $this->city .
-        ', ' . $this->country;
+        return $this->address.
+        ', '.$this->postal_code.
+        ' '.$this->city.
+        ', '.$this->country;
     }
 
     public function getAddress(): ?string
@@ -203,6 +204,7 @@ class Detail
         if ($this->strikes > 2) {
             $this->is_banned = true;
         }
+
         return $this;
     }
 
