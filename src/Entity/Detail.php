@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DetailRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\HasLifecycleCallbacks]
@@ -53,12 +55,19 @@ class Detail
     #[ORM\OneToOne(inversedBy: 'detail', cascade: ['persist', 'remove'])]
     private ?User $pro = null;
 
+    /**
+     * @var Collection<int, LandingPage>
+     */
+    #[ORM\OneToMany(targetEntity: LandingPage::class, mappedBy: 'detail')]
+    private Collection $landingPages;
+
     public function __construct()
     {
         $this->country = 'FR';
         $this->portfolio_check = false;
         $this->strikes = 0;
         $this->is_banned = false;
+        $this->landingPages = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -247,5 +256,35 @@ class Detail
     public function __toString()
     {
         return $this->company_name;
+    }
+
+    /**
+     * @return Collection<int, LandingPage>
+     */
+    public function getLandingPages(): Collection
+    {
+        return $this->landingPages;
+    }
+
+    public function addLandingPage(LandingPage $landingPage): static
+    {
+        if (!$this->landingPages->contains($landingPage)) {
+            $this->landingPages->add($landingPage);
+            $landingPage->setDetail($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLandingPage(LandingPage $landingPage): static
+    {
+        if ($this->landingPages->removeElement($landingPage)) {
+            // set the owning side to null (unless already changed)
+            if ($landingPage->getDetail() === $this) {
+                $landingPage->setDetail(null);
+            }
+        }
+
+        return $this;
     }
 }
