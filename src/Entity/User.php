@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -66,6 +68,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: true)]
     private ?Subscription $subscription = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $image = null;
+
+    /**
+     * @var Collection<int, LoginHistory>
+     */
+    #[ORM\OneToMany(targetEntity: LoginHistory::class, mappedBy: 'user')]
+    private Collection $loginHistories;
+
     /**
      * Constructeur pour gérer les 
      * attributs non-nullables par défaut
@@ -75,6 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->is_minor = false;
         $this->is_terms = false;
         $this->is_gpdr = false;
+        $this->loginHistories = new ArrayCollection();
     }
     
     #[ORM\PrePersist]
@@ -291,6 +303,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->subscription = $subscription;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LoginHistory>
+     */
+    public function getLoginHistories(): Collection
+    {
+        return $this->loginHistories;
+    }
+
+    public function addLoginHistory(LoginHistory $loginHistory): static
+    {
+        if (!$this->loginHistories->contains($loginHistory)) {
+            $this->loginHistories->add($loginHistory);
+            $loginHistory->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLoginHistory(LoginHistory $loginHistory): static
+    {
+        if ($this->loginHistories->removeElement($loginHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($loginHistory->getUser() === $this) {
+                $loginHistory->setUser(null);
+            }
+        }
 
         return $this;
     }
