@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Mime\Email;
+use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\LoginLink\LoginLinkHandlerInterface;
 
 class SecurityController extends AbstractController
 {
@@ -22,6 +27,39 @@ class SecurityController extends AbstractController
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
+    }
+
+    #[Route('/login', name: 'app_login')]
+    public function requestLoginLink(LoginLinkHandlerInterface $loginLinkHandler, UserRepository $userRepository, Request $request, MailerInterface $mailer): Response
+    {
+        // check if form is submitted
+        if ($request->isMethod('POST')) {
+            // load the user in some way (e.g. using the form input)
+            $email = $request->getPayload()->get('email');
+            $user = $userRepository->findOneBy(['email' => $email]);
+
+            // create a login link for $user this returns an instance
+            // of LoginLinkDetails
+            $loginLinkDetails = $loginLinkHandler->createLoginLink($user);
+            $loginLink = $loginLinkDetails->getUrl();
+
+            // ... send the link and return a response (see next section)
+            $loginLinkDetails = $loginLinkHandler->createLoginLink($user);
+            $loginLink = $loginLinkDetails->getUrl();
+
+            $email = (new Email())
+            ->from('contact@miniamaker.fr')
+            ->to($user->getEmail())
+            ->priority(Email::PRIORITY_HIGH)
+            ->subject('Please Confirm your Email')
+            ->text('Votre lien de connexion')
+            ->html("<p>Click : <br>" . $loginLink . "</p>");
+
+            $mailer->send($email);
+        }
+
+        // if it's not submitted, render the form to request the "login link"
+        return $this->render('security/login.html.twig');
     }
 
     #[Route(path: '/logout', name: 'app_logout')]

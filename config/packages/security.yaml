@@ -20,6 +20,9 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
+            login_link:
+                check_route: login_check
+                signature_properties: ['id']
             logout:
                 path: app_logout
                 # where to redirect after logout
