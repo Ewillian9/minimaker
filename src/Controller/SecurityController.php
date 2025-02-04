@@ -17,9 +17,7 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils, Request $request, EntityManagerInterface $em): Response
     {
-
-        $userAgent = $request->headers->get('User-Agent');
-        $deviceDetector = new DeviceDetector($userAgent);
+        $deviceDetector = new DeviceDetector($request->headers->get('User-Agent'));
         $deviceDetector->parse();
 
         if ($this->getUser()) {
