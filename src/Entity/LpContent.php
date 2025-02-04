@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LpContentRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class LpContent
 {
     #[ORM\Id]
@@ -16,12 +17,12 @@ class LpContent
 
     #[ORM\OneToOne(inversedBy: 'lpContent', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?LandingPage $landing_page = null;
+    private ?LandingPage $landingPage = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $excerpt = null;
 
     #[ORM\Column]
@@ -30,6 +31,19 @@ class LpContent
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
+    #[ORM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function preUpdate(): void
+    {
+        $this->updated_at = new \DateTimeImmutable();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -37,12 +51,12 @@ class LpContent
 
     public function getLandingPage(): ?LandingPage
     {
-        return $this->landing_page;
+        return $this->landingPage;
     }
 
-    public function setLandingPage(LandingPage $landing_page): static
+    public function setLandingPage(LandingPage $landingPage): static
     {
-        $this->landing_page = $landing_page;
+        $this->landingPage = $landingPage;
 
         return $this;
     }
@@ -52,7 +66,7 @@ class LpContent
         return $this->content;
     }
 
-    public function setContent(string $content): static
+    public function setContent(?string $content): static
     {
         $this->content = $content;
 
@@ -64,7 +78,7 @@ class LpContent
         return $this->excerpt;
     }
 
-    public function setExcerpt(string $excerpt): static
+    public function setExcerpt(?string $excerpt): static
     {
         $this->excerpt = $excerpt;
 

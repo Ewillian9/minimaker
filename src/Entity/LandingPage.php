@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LandingPageRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class LandingPage
 {
     #[ORM\Id]
@@ -16,9 +17,10 @@ class LandingPage
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'landingPages')]
-    private ?detail $detail = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Detail $detail = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 80)]
     private ?string $type = null;
 
     #[ORM\Column]
@@ -27,18 +29,32 @@ class LandingPage
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\OneToOne(mappedBy: 'landing_page', cascade: ['persist', 'remove'])]
-    private ?LpContent $lpContent = null;
-
     /**
-     * @var Collection<int, tag>
+     * @var Collection<int, Tag>
      */
-    #[ORM\ManyToMany(targetEntity: tag::class, inversedBy: 'landingPages')]
-    private Collection $tag;
+    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'landingPages')]
+    private Collection $tags;
+
+    #[ORM\OneToOne(mappedBy: 'landingPage', cascade: ['persist', 'remove'])]
+    private ?LpContent $lpContent = null;
 
     public function __construct()
     {
-        $this->tag = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+        $this->type = 'miniature';
+    }
+
+    #[ORM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function preUpdate(): void
+    {
+        $this->updated_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -46,12 +62,12 @@ class LandingPage
         return $this->id;
     }
 
-    public function getDetail(): ?detail
+    public function getDetail(): ?Detail
     {
         return $this->detail;
     }
 
-    public function setDetail(?detail $detail): static
+    public function setDetail(?Detail $detail): static
     {
         $this->detail = $detail;
 
@@ -94,6 +110,33 @@ class LandingPage
         return $this;
     }
 
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): static
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+            $tag->addLandingPage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): static
+    {
+        if ($this->tags->removeElement($tag)) {
+            $tag->removeLandingPage($this);
+        }
+
+        return $this;
+    }
+
     public function getLpContent(): ?LpContent
     {
         return $this->lpContent;
@@ -107,30 +150,6 @@ class LandingPage
         }
 
         $this->lpContent = $lpContent;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, tag>
-     */
-    public function getTag(): Collection
-    {
-        return $this->tag;
-    }
-
-    public function addTag(tag $tag): static
-    {
-        if (!$this->tag->contains($tag)) {
-            $this->tag->add($tag);
-        }
-
-        return $this;
-    }
-
-    public function removeTag(tag $tag): static
-    {
-        $this->tag->removeElement($tag);
 
         return $this;
     }

@@ -7,20 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity(repositoryClass: DetailRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Detail
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updated_at = null;
 
     #[ORM\Column(length: 80)]
     private ?string $company_number = null;
@@ -31,7 +25,7 @@ class Detail
     #[ORM\Column(length: 255)]
     private ?string $address = null;
 
-    #[ORM\Column(length: 80)]
+    #[ORM\Column(length: 255)]
     private ?string $city = null;
 
     #[ORM\Column(length: 80)]
@@ -53,17 +47,24 @@ class Detail
     private ?bool $is_banned = null;
 
     #[ORM\OneToOne(inversedBy: 'detail', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $pro = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updated_at = null;
 
     /**
      * @var Collection<int, LandingPage>
      */
-    #[ORM\OneToMany(targetEntity: LandingPage::class, mappedBy: 'detail')]
+    #[ORM\OneToMany(targetEntity: LandingPage::class, mappedBy: 'detail', orphanRemoval: true)]
     private Collection $landingPages;
 
     public function __construct()
     {
-        $this->country = 'FR';
+        $this->country = "FR" ;
         $this->portfolio_check = false;
         $this->strikes = 0;
         $this->is_banned = false;
@@ -113,10 +114,10 @@ class Detail
 
     public function getFullAddress(): ?string
     {
-        return $this->address.
-        ', '.$this->postal_code.
-        ' '.$this->city.
-        ', '.$this->country;
+        return $this->address . 
+        ', ' . $this->postal_code . 
+        ' ' . $this->city . 
+        ', ' . $this->country;
     }
 
     public function getAddress(): ?string
@@ -210,10 +211,9 @@ class Detail
 
     public function setIsBanned(): static
     {
-        if ($this->strikes > 2) {
+        if($this->strikes > 1) {
             $this->is_banned = true;
         }
-
         return $this;
     }
 
@@ -222,7 +222,7 @@ class Detail
         return $this->pro;
     }
 
-    public function setPro(?User $pro): static
+    public function setPro(User $pro): static
     {
         $this->pro = $pro;
 
@@ -253,6 +253,7 @@ class Detail
         return $this;
     }
 
+    // Indispensable
     public function __toString()
     {
         return $this->company_name;

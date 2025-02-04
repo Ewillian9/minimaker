@@ -15,13 +15,13 @@ class Tag
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 80)]
     private ?string $name = null;
 
     /**
      * @var Collection<int, LandingPage>
      */
-    #[ORM\ManyToMany(targetEntity: LandingPage::class, mappedBy: 'tag')]
+    #[ORM\ManyToMany(targetEntity: LandingPage::class, inversedBy: 'tags')]
     private Collection $landingPages;
 
     public function __construct()
@@ -58,7 +58,6 @@ class Tag
     {
         if (!$this->landingPages->contains($landingPage)) {
             $this->landingPages->add($landingPage);
-            $landingPage->addTag($this);
         }
 
         return $this;
@@ -66,9 +65,7 @@ class Tag
 
     public function removeLandingPage(LandingPage $landingPage): static
     {
-        if ($this->landingPages->removeElement($landingPage)) {
-            $landingPage->removeTag($this);
-        }
+        $this->landingPages->removeElement($landingPage);
 
         return $this;
     }
