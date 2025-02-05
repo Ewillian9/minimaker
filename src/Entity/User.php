@@ -87,6 +87,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->is_terms = false;
         $this->is_gpdr = false;
         $this->loginHistories = new ArrayCollection();
+        $this->image = "default.png";
     }
     
     #[ORM\PrePersist]
