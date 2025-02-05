@@ -1,0 +1,8 @@
+<div class="d-flex align-items-center gap-3">
+    {% if app.user %}
+        <a href={{path('app_logout')}} class="btn btn-outline-secondary">Deconnexion</a>
+        {% else %}
+        <a href={{path('app_login')}} class="btn btn-outline-secondary">Connexion</a>
+        <a href={{path('app_register')}} class="btn btn-outline-secondary">Inscription</a>
+    {% endif %}
+</div>
