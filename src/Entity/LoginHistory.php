@@ -14,10 +14,11 @@ class LoginHistory
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'loginHistories')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $login_date = null;
+    private ?\DateTimeImmutable $login_at = null;
 
     #[ORM\Column(length: 255)]
     private ?string $ip_address = null;
@@ -33,7 +34,7 @@ class LoginHistory
 
     public function __construct()
     {
-        $this->login_date = new \DateTimeImmutable();
+        $this->login_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -53,14 +54,14 @@ class LoginHistory
         return $this;
     }
 
-    public function getLoginDate(): ?\DateTimeImmutable
+    public function getLoginAt(): ?\DateTimeImmutable
     {
-        return $this->login_date;
+        return $this->login_at;
     }
 
-    public function setLoginDate(\DateTimeImmutable $login_date): static
+    public function setLoginAt(\DateTimeImmutable $login_at): static
     {
-        $this->login_date = $login_date;
+        $this->login_at = $login_at;
 
         return $this;
     }

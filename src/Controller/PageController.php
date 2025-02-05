@@ -13,17 +13,21 @@ final class PageController extends AbstractController
     #[Route('/', name: 'app_homepage', methods: ['GET'])]
     public function index(Request $request, LoginHistoryService $lhs): Response
     {
+
         if ($this->getUser() && $request->headers->get('referer') == 'https://127.0.0.1:8000/connexion')
-            {
-                $lhs->addHistory(
-                    $this->getUser(),
-                    $request->headers->get('user-agent'),
-                    $request->getClientIp()
-                );
-            }
+        {
+            $lhs->addHistory(
+                $this->getUser(),
+                $request->headers->get('user-agent'), 
+                $request->getClientIp()
+            );
+        }
+
         if (!$this->getUser()) {
             return $this->render('page/lp.html.twig');
         }
+
         return $this->render('page/homepage.html.twig');
     }
+
 }

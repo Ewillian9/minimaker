@@ -74,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, LoginHistory>
      */
-    #[ORM\OneToMany(targetEntity: LoginHistory::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: LoginHistory::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $loginHistories;
 
     /**

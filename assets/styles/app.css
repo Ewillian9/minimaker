@@ -1,11 +1,33 @@
 body {
     font-family: "Inter Tight", sans-serif;
+    letter-spacing: 0.02rem;
+    line-height: 1.5;
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: "Poppins", sans-serif;
+    letter-spacing: -0.1rem;
+    line-height: 1.2;
+    font-weight: 600;
+    padding-bottom: 1.5rem;
 }
 
 .logo {
     font-family: "Lexend Mega", sans-serif;
 }
+
+.container-sm { max-width: 600px; }
+.container-md { max-width: 800px; }
+.container-lg { max-width: 1000px; }
+.container-xl { max-width: 1200px; }
+
+.center { 
+    display: grid;
+    place-items: center;
+ }
+
+.text-xl { font-size: 3rem; }
+.text-2xl { font-size: 3.5rem; }
+.text-3xl { font-size: 4rem; }
+.text-4xl { font-size: 4.5rem; }
+.text-5xl { font-size: 5rem; }
