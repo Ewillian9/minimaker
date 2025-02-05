@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\LoginHistory;
 use DeviceDetector\DeviceDetector;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
