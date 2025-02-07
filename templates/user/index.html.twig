@@ -1,25 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Mon profil - Réglages {% endblock %}
 
 {% block body %}
 
-{% if app.user.isVerified == false %}
-    <h2>Validez votre address e-mail</h2>
-{% endif %}
+{% include 'components/nav.html.twig' %}
 
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/Ewillian9/Desktop/Lab/minimaker/src/Controller/UserController.php</code></li>
-        <li>Your template at <code>C:/Users/Ewillian9/Desktop/Lab/minimaker/templates/user/index.html.twig</code></li>
-    </ul>
+<div class="container pt-5">
+    <div class="row m-0">
+    <header class="col-md-3 text-center bg-white shadow-sm m-0">
+        <div class="p-3">
+            <img src={{ app.user.pathImage }} alt={{ app.user.username }} class="img-fluid rounded-circle" width="120">
+        </div>
+        <hr>
+        <div class="text-start">
+            <p class="border-bottom pb-3">
+                {{ ux_icon('mdi:account-circle', { class: 'h-1 me-2 text-secondary' }) }}
+                {{ app.user.username }} <span class="ms-2 badge text-bg-secondary">{{ app.user.roles[0]|slice(5) }}</span>
+            </p>
+            <p class="border-bottom pb-3">
+                {{ ux_icon('mdi:card-account-details', { class: 'h-1 me-2 text-secondary' }) }}
+                {{ app.user.fullname }}
+            </p>
+            <p class="border-bottom pb-3">
+                {{ ux_icon('mdi:email', { class: 'h-1 me-2 text-secondary' }) }}
+                {{ app.user.email }}
+            </p>
+            <p class="border-bottom pb-3">
+                <a href="#" class="text-dark text-decoration-none">
+                    {{ ux_icon('mdi:cog', { class: 'h-1 me-2 text-secondary' }) }}
+                    Gérer mon abonnement
+                </a>
+            </p>
+            <p class="border-bottom pb-3">
+                <a href="#" class="text-dark text-decoration-none">
+                    {{ ux_icon('mdi:pencil', { class: 'h-1 me-2 text-secondary' }) }}
+                    Modifier ma page de profil
+                </a>
+            </p>
+            <p class="border-bottom pb-3">
+                <a href="#" class="text-dark text-decoration-none">
+                    {{ ux_icon('mdi:book', { class: 'h-1 me-2 text-secondary' }) }}
+                    Mes pages
+                </a>
+            </p>
+            <p class="border-bottom pb-3">
+                <a href="#" class="text-dark text-decoration-none">
+                    {{ ux_icon('mdi:message-text', { class: 'h-1 me-2 text-secondary' }) }}
+                    Messagerie
+                </a>
+            </p>
+        </div>
+    </header>
+    <section class="col-md-9 p-3" ark text-decoration-none">
+        <div class="container-md">
+            {{ form(userForm) }}
+        </div>
+    </section>
+    </div>
 </div>
+
 {% endblock %}

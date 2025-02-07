@@ -54,7 +54,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
@@ -62,7 +62,7 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('isMinor', CheckboxType::class, [
                 'row_attr' => ['class' => 'form-check mb-2'],
-                'label_attr' => ['class' => 'form-check-label'],
+                'label_attr' => ['class' => 'form-check-label', 'checked' => 'checked'],
                 'attr' => ['class' => 'form-check-input'],
                 'label' => "Vous confirmez que vous êtes majeur",
                 'constraints' => [
@@ -74,7 +74,7 @@ class RegistrationFormType extends AbstractType
             ->add('isTerms', CheckboxType::class, [
                 'row_attr' => ['class' => 'form-check mb-2'],
                 'label_attr' => ['class' => 'form-check-label'],
-                'attr' => ['class' => 'form-check-input'],
+                'attr' => ['class' => 'form-check-input', 'checked' => 'checked'],
                 'label' => "J'accepte les CGU et CGV",
                 'constraints' => [
                     new IsTrue([
@@ -85,7 +85,7 @@ class RegistrationFormType extends AbstractType
             ->add('isGpdr', CheckboxType::class, [
                 'row_attr' => ['class' => 'form-check mb-2'],
                 'label_attr' => ['class' => 'form-check-label'],
-                'attr' => ['class' => 'form-check-input'],
+                'attr' => ['class' => 'form-check-input', 'checked' => 'checked'],
                 'label' => "J'accepte la politique RGPD de miniamaker",
                 'constraints' => [
                     new IsTrue([
