@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\UserFormType;
+use App\Service\UploaderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,15 +13,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class UserController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile', methods: ['GET', 'POST'])]
-    public function index(Request $request, EntityManagerInterface $em): Response
+    public function index(
+        Request $request, 
+        EntityManagerInterface $em,
+        UploaderService $us
+        ): Response
     {
         $user = $this->getUser();
         $form = $this->createForm(UserFormType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($user);
-            $em->flush();
+
+            if (true) { // TODO: Vérification de mot de passe
+                $image = $form->get('image')->getData(); // Récupère l'image
+                if ($image != null) { // Si l'image est téléversée
+                    $user->setImage( // Méthode de mutation de l'image
+                        $us->uploadFile( // Méthode de téléversement
+                            $image, // Image téléversée
+                            $user->getImage() // Image actuelle
+                            )
+                    );
+                }
+
+                $em->persist($user);
+                $em->flush();
+            }
 
             // Redirection avec flash message
             $this->addFlash('success', 'Votre profil à été mis à jour');
