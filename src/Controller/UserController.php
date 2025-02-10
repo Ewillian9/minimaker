@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class UserController extends AbstractController
 {
@@ -16,7 +17,8 @@ final class UserController extends AbstractController
     public function index(
         Request $request, 
         EntityManagerInterface $em,
-        UploaderService $us
+        UploaderService $us,
+        UserPasswordHasherInterface $passwordHasher
         ): Response
     {
         $user = $this->getUser();
@@ -25,7 +27,12 @@ final class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if (true) { // TODO: Vérification de mot de passe
+            $password = $passwordHasher->hashPassword(
+                $user,
+                $form->get('password')->getData()
+            );
+
+            if ($password === $user->getPassword()) { // TODO: Vérification de mot de passe
                 $image = $form->get('image')->getData(); // Récupère l'image
                 if ($image != null) { // Si l'image est téléversée
                     $user->setImage( // Méthode de mutation de l'image
@@ -38,12 +45,13 @@ final class UserController extends AbstractController
 
                 $em->persist($user);
                 $em->flush();
-            }
 
-            // Redirection avec flash message
-            $this->addFlash('success', 'Votre profil à été mis à jour');
+                $this->addFlash('success', 'Votre profil à été mis à jour');
+            }
+            $this->addFlash('error', 'Une erreur est survenue');
             return $this->redirectToRoute('app_profile');
         }
+        $this->addFlash('success', 'Votre profil à été mis à jour');
 
         if (!$this->getUser()->isVerified()) {
             $this->addFlash('danger', 'Merci de validez votre adresse e-mail.');
