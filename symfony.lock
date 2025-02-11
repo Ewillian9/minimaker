@@ -302,6 +302,9 @@
             "assets/icons/symfony.svg"
         ]
     },
+    "symfony/ux-toggle-password": {
+        "version": "v2.23.0"
+    },
     "symfony/ux-turbo": {
         "version": "2.22",
         "recipe": {

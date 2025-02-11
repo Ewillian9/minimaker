@@ -5,10 +5,12 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     APP_URL: '%env(APP_URL)%'
-    OPENAI: '%env(APP_URL)%'
-    ELEVEN_LABS: '%env(APP_URL)%'
-    STRIPE_PK: '%env(APP_URL)%'
-    STRIPE_SK: '%env(APP_URL)%'
+    OPENAI: '%env(OPENAI)%'
+    ELEVEN_LABS: '%env(ELEVEN_LABS)%'
+    STRIPE_PK: '%env(STRIPE_PK)%'
+    STRIPE_SK: '%env(STRIPE_SK)%'
+    STRIPE_SUB_ANNUALLY: '%env(STRIPE_SUB_ANNUALLY)%'
+    STRIPE_SUB_MONTHLY: '%env(STRIPE_SUB_MONTHLY)%'
     upload_users_images: '%kernel.project_dir%/public/medias/images/users'
 
 services:
