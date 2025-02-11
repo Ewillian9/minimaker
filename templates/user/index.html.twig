@@ -36,7 +36,7 @@
                 <p class="help text-center">Compte créé il y a {{ app.user.createdAt|time_diff }}</p>
             </div>
         </header>
-        <section class="col-md-9 p-3" ark text-decoration-none">
+        <section class="col-md-9 p-3 text-decoration-none">
             <div class="row">
                 <div class="card shadow p-3 col-md-4">
                     {{ form(userForm) }}
@@ -68,10 +68,14 @@
                                 </div>
                                 <div class="card-body">
                                     <p class="mb-3">
-                                        {{ app.user.subscription.name ?? 'Aucune landing pages actuellement' }}
+                                        {{ app.user.detail.landingPages.name ?? 'Aucune landing pages actuellement' }}
                                     </p>
-                                    {% if app.user.subscription is null %}
-                                        <a href="#" class="btn btn-primary">Créer une page</a>
+                                    {% if  app.user.detail is null %}
+                                        <a href="{{ path('lp_add') }}" class="btn btn-primary">Créer une page</a>
+                                    {% else %} 
+                                        {% if app.user.detail.landingPages|length == 0 %}
+                                            <a href="{{ path('lp_add') }}" class="btn btn-primary">Créer une page</a>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                             </div>
