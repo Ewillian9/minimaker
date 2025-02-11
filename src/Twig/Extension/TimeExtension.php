@@ -41,4 +41,3 @@ class TimeExtension extends AbstractExtension
         return $diff->i . ' minute' . ($diff->i > 1 ? 's' : '');
     }
 }
-                    
