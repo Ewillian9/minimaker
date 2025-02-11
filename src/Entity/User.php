@@ -64,10 +64,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\ManyToOne(inversedBy: 'clients')]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Subscription $subscription = null;
-
     #[ORM\Column(length: 255)]
     private ?string $image = null;
 
@@ -76,6 +72,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\OneToMany(targetEntity: LoginHistory::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $loginHistories;
+
+    #[ORM\OneToOne(mappedBy: 'client', cascade: ['persist', 'remove'])]
+    private ?Subscription $subscription = null;
 
     /**
      * Constructeur pour gérer les 
@@ -291,23 +290,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSubscription(): ?Subscription
-    {
-        return $this->subscription;
-    }
-
-    public function setSubscription(Subscription $subscription): static
-    {
-        // set the owning side of the relation if necessary
-        if ($subscription->getClients() !== $this) {
-            $subscription->addClient($this);
-        }
-
-        $this->subscription = $subscription;
-
-        return $this;
-    }
-
     public function getImage(): ?string
     {
         return $this->image;
@@ -365,5 +347,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return false;
+    }
+
+    public function getSubscription(): ?Subscription
+    {
+        return $this->subscription;
+    }
+
+    public function setSubscription(Subscription $subscription): static
+    {
+        // set the owning side of the relation if necessary
+        if ($subscription->getClient() !== $this) {
+            $subscription->setClient($this);
+        }
+
+        $this->subscription = $subscription;
+
+        return $this;
     }
 }
