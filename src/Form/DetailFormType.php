@@ -34,7 +34,7 @@ class DetailFormType extends AbstractType
                     )
                     ],
                     'choices' => [
-                        'Professionnel' => 'Pro',
+                        'Prestataire' => 'Pro',
                         'Agent d\'influenceur' => 'Agent',
                     ]
             ])
