@@ -48,10 +48,8 @@
                                     Mon abonnement
                                 </div>
                                 <div class="card-body">
-                                    <p class="mb-3">
-                                        {{ app.user.subscription.name ?? 'Aucun abonnement actuellement' }}
-                                    </p>
                                     {% if app.user.subscription is null or app.user.subscription.isActive == false  %}
+                                    <p class="mb-3">Aucun abonnement actuellement</p>
                                     <form action="{{ path('app_subscription') }}" method="post">
                                         <input type="hidden" name="csrf_token" value="{{ csrf_token('app_profile') }}">
                                         <div class="d-flex justify-content-between">
@@ -62,6 +60,8 @@
                                             <button class="btn btn-primary" type="submit">S'abonner</button>
                                         </div>
                                     </form>
+                                    {% else %}
+                                    <p class="mb-3">Votre abonment de {{ app.user.subscription.amount }}€/{{ app.user.subscription.frequency }} est actif depuis le {{ app.user.subscription.createdAt|date }}</p>
                                     {% endif %}
                                 </div>
                             </div>
