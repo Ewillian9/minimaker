@@ -3,7 +3,7 @@
 {% block title %}Complétez votre profil{% endblock %}
 
 {% block body %}
-<div class="vh-100 center">
+<div class="center">
     <form action={{ path('app_complete') }} method="post" class="container-xs shadow bg-white p-3">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         <div class="form-group mb-3">

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Disscusion avec ...{% endblock %}
+
+{% block body %}
+
+<div class="position-relative container-sm center mt-5">
+    <h1 class="text-center mb-5">Liste de vos disscusions</h1>
+    <div class="bg-white rounded-3 shadow-sm p-3">
+        <form 
+            hx-post={{ path('app_message_show', { id: app.request.get('id') }) }} 
+            hx-target="#messages-container"
+            hx-swap="beforebegin"
+            class="d-flex justify-content-between mb-3">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token('app_message') }}">
+            <input type="text" name="message" id="message" class="form-control" placeholder="Écrivez ici">
+            <button type="submit" class="btn btn-primary">{{ ux_icon('mdi:send', { class: 'h-1' }) }}</button>
+        </form>
+        <div id="messages-container" class="d-flex flex-column gap-2 p-2">
+            {% for item in messages %}
+                {{ include('message/_message.html.twig', { item: item }) }}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

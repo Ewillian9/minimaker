@@ -1,0 +1,25 @@
+    <table class="table bg-white rounded-3 shadow-sm">
+        <tr class="">
+            <th class="">Avec</th>
+            <th class="">Sujet</th>
+            <th class="">Date</th>
+        </tr>
+        <tbody>
+            {% for item in app.user.discussions %}
+                <tr class="">
+                    <td class="">
+                        <img src="{{ asset('medias/images/default.png') }}" alt="{{ item.subject }}" width="25">
+                    </td>
+                    <td class="">
+                        <a href="{{ path('app_message_show', { id: item.id }) }}" class="text-danger text-decoration-none">
+                            <p class="fs-5 fw-bold">{{ item.subject }}</p>
+                        </a>
+                        <p class="help text-secondary">{{ item.messages|length  }} messages</p>
+                    </td>
+                    <td class="help text-secondary">
+                        {{ item.createdAt|time_diff }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
