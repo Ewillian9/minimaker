@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Service\PaymentService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[IsGranted('ROLE_USER')]
 final class SubscriptionController extends AbstractController
@@ -46,9 +47,16 @@ final class SubscriptionController extends AbstractController
     }
 
     #[Route('/subscription/success', name: 'app_subscription_success')]
-    public function success(Request $request): Response
+    public function success(EntityManagerInterface $em): Response
     {
         // Logique de traitement du succès
+        $subscription = $this->getUser()->getSubscription();
+        
+        $subscription->setIsActive(true);
+
+        $em->persist($subscription);
+        $em->flush();
+
         return $this->redirectToRoute('app_profile');
     }
 

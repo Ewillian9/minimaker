@@ -4,13 +4,11 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Entity\LoginHistory;
-use Symfony\Component\Mime\Email;
 use DeviceDetector\DeviceDetector;
 use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
