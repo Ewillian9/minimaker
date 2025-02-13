@@ -57,6 +57,8 @@ final class SubscriptionController extends AbstractController
         $em->persist($subscription);
         $em->flush();
 
+        $this->addFlash('success', 'Votre abonnement a bien ete pris en compte. Merci!');
+
         return $this->redirectToRoute('app_profile');
     }
 
@@ -64,6 +66,7 @@ final class SubscriptionController extends AbstractController
     public function cancel(): Response
     {
         // Logique de traitement de l'annulation
+        $this->addFlash('error', "Votre souscription a ete annulé ou une erreur s'est produite");
         return $this->redirectToRoute('app_profile');
     }
 }
