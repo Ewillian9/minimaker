@@ -19,8 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class LoginHistoryService extends AbstractController
 {
-    public function __construct(readonly private EntityManagerInterface $em, MailerInterface $mailer){
-        $this->mailer = $mailer;
+    public function __construct(readonly private EntityManagerInterface $em, private MailerInterface $mailer){
     }
 
     public function addHistory(User $user, string $userAgent, string $ip): void
@@ -34,15 +33,15 @@ class LoginHistoryService extends AbstractController
             ->setIpAddress($ip)
             ->setDevice($deviceDetector->getDeviceName())
             ->setOs($deviceDetector->getOs()['name'])
-            ->setBrowser($deviceDetector->getClient()['name'])
-            ;
+            ->setBrowser($deviceDetector->getClient()['name']);
+
         $this->em->persist($loginHistory);
         $this->em->flush();
 
         $email = (new TemplatedEmail())
             ->from(new Address('contact@miniamaker.fr', 'miniamaker'))
             ->to((string) $user->getEmail())
-            ->subject('Nouvelle connexion détéctée')
+            ->subject('Nouvelle connexion détéctée depuis ' . ($ip))
             ->htmlTemplate('security/login_email.html.twig');
 
         $this->mailer->send($email);
