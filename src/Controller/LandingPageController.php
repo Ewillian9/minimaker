@@ -10,7 +10,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 final class LandingPageController extends AbstractController
 {
-    #[Route('/landing/add', name: 'lp_add')]
+    #[Route('/landing/add', name: 'lp_add', methods:['GET', 'POST'])]
     public function add(): Response
     {   
         $user = $this->getUser()->getRoles()[0];

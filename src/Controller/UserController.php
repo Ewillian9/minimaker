@@ -13,10 +13,13 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class UserController extends AbstractController
 {
+    public function __construct(
+        private EntityManagerInterface $em
+    ){}
+
     #[Route('/profile', name: 'app_profile', methods: ['GET', 'POST'])]
     public function index(
         Request $request, 
-        EntityManagerInterface $em,
         UploaderService $us,
         UserPasswordHasherInterface $passwordHasher
         ): Response
@@ -44,8 +47,8 @@ final class UserController extends AbstractController
                     );
                 }
 
-                $em->persist($user);
-                $em->flush();
+                $this->em->persist($user);
+                $this->em->flush();
                 
                 // Redirection avec flash message
                 $this->addFlash('success', 'Votre profil à été mis à jour');
@@ -66,7 +69,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/complete', name: 'app_complete', methods: ['POST'])]
-    public function complete(Request $request, EntityManagerInterface $em): Response
+    public function complete(Request $request): Response
     {
         $data = $request->getPayload(); // on récupère les données du formulaire
         if (!empty($data->get('username')) && !empty($data->get('fullname'))) {
@@ -76,8 +79,8 @@ final class UserController extends AbstractController
                 ->setUsername($data->get('username')) // on met à jour username
                 ->setFullname($data->get('fullname')) // on met à jour fullname
                 ;
-            $em->persist($user); // on persiste l'utilisateur
-            $em->flush(); // on sauvegarde les modifications en base de données
+            $this->em->persist($user); // on persiste l'utilisateur
+            $this->em->flush(); // on sauvegarde les modifications en base de données
             
             // Redirection avec flash message
             $this->addFlash('success', 'Votre profil est complété');

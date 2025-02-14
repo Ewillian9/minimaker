@@ -19,7 +19,7 @@ final class MessageController extends AbstractController
         private DiscussionRepository $dr,
         private MessageRepository $mr,
         private EntityManagerInterface $em,
-    ) {}
+    ){}
 
     #[Route('/messages', name: 'app_message', methods: ['GET'])]
     public function index(): Response
