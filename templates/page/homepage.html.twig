@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+    <h1>Tableau de bord</h1>
+    {% if app.user.subscription is null or app.user.subscription.isActive == false  %}
+        <p class="mb-3">Pour consulter les professionnels veuillez prednre un abonnement</p>
+        <form action="{{ path('app_subscription') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token('app_profile') }}">
+            <div class="d-flex justify-content-between">
+                <select class="btn btn-secondary w-100" name="plan">
+                    <option value="990">990&euro; /an</option>
+                    <option value="99">99&euro; /mois</option>
+                </select>
+                <button class="btn btn-primary" type="submit">S'abonner</button>
+            </div>
+        </form>
+    {% else %}
+        <p class="mb-3">Vous avez un abonnement, prennez contact avec des professionels!</p>
+    {% endif %}
+{% endblock %}
