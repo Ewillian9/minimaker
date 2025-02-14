@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un compte{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-4 p-4 mx-auto">
+            <h1 class="fs-4">Créez un compte et développez des opportunités dans la <span class="">Creator Economy</span></h1>
+            <p class="text-secondary mb-4">
+                <span class="logo">miniamaker</span> est la plateforme dédiée à la rencontre entre créateurs de contenu, prestataires et les agents d'influenceurs. Créez votre compte et entrez en contact avec la sélection des meilleurs contributeurs du domaine de la <span class="">Creator Economy</span>.
+            </p>
+            <div class="">
+                {% for flash_error in app.flashes('verify_email_error') %}
+                    <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                {% endfor %}
+            
+                {{ form_errors(registrationForm) }}
+                {{ form(registrationForm) }}
+            </div>
+        </div>
+        <div class="col-md-8">
+            <img src="https://picsum.photos/id/100/1200/1200" alt="Image de fond" class="img-fluid">
+        </div>
+    </div>
+{% endblock %}
